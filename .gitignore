@@ -1,0 +1,20 @@
+# macOS
+.DS_Store
+
+# Playwright MCP traces / screenshots from local dev runs
+.playwright-mcp/
+*.png
+!vp.png
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# Local secrets
+.env
+.env.local
+
+# Dev 
+
+# Session handoff doc (local context, not source)
+HANDOFF.md

@@ -58,11 +58,12 @@ angular.module("vpApp").service("vpConfiguration", function($window, $location, 
 		proportional_end_hour: 20,
 		show_timed_events: true,
 		show_all_day_events: true,
+		show_birthdays: false,
 		single_day_as_multi_day: false,
 		text_on_singleday_events: true,
 		text_on_multiday_events: true,
 		scale_of_multiday_events: 100,
-		event_background: 'cal'
+		event_background: 'evt'
 	};
 	$rootScope.vp.appdata = appdata;
 
@@ -253,17 +254,16 @@ angular.module("vpApp").service("vpGCal", function(vpConfiguration, $rootScope, 
 		.then(rcv, fail);
 
 		function rcv(response) {
-			for (item of response.result.items) {
-				if (item.selected)
-					calendarlist.push(new VpCalendar(item));
-			}
+			for (item of response.result.items)
+				calendarlist.push(new VpCalendar(item));
 
 			if (response.result.nextPageToken) {
 				reqparams.pageToken = response.result.nextPageToken;
 				reqCalendars(reqparams);
 			}
-
-			onload();
+			else {
+				onload();
+			}
 		};
 	}
 
@@ -339,7 +339,7 @@ angular.module("vpApp").service("vpGCal", function(vpConfiguration, $rootScope, 
 		var id = item.id;
 		var synctok = null;
 		var cls = {};
-		this.name = item.summary;
+		this.name = item.summaryOverride || item.summary;
 		this.colour = {text: item.foregroundColor, background: item.backgroundColor};
 		this.cls = cls;
 		syncStg(false);
@@ -377,6 +377,9 @@ angular.module("vpApp").service("vpGCal", function(vpConfiguration, $rootScope, 
 					return;
 
 				if (!item.hasOwnProperty("start"))
+					return;
+
+				if (item.eventType == "birthday" && !cfg.show_birthdays)
 					return;
 
 				if (reqparams.syncToken)
@@ -424,20 +427,17 @@ angular.module("vpApp").service("vpGCal", function(vpConfiguration, $rootScope, 
 		}
 
 		function syncStg(write) {
-			var tog = JSON.parse($window.localStorage.getItem("vp-caltoginfo"));
-			if (!tog)
-				tog = {};
+			var tog = JSON.parse($window.localStorage.getItem("vp-caltoginfo")) || {};
 
 			if (write) {
-				delete tog[id];
-				if (cls.checked)
-					tog[id] = true;
-
+				tog[id] = !!cls.checked;
 				$window.localStorage.setItem("vp-caltoginfo", JSON.stringify(tog));
 			}
 			else {
-				if (tog[id])
-					cls.checked = true;
+				if (Object.prototype.hasOwnProperty.call(tog, id))
+					cls.checked = !!tog[id];
+				else
+					cls.checked = item.selected === false;
 			}
 		}
 	}
