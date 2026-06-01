@@ -21,7 +21,7 @@ angular.module("vpApp").service("vpConfiguration", function($window, $location, 
 
 	function loadPermissions_then(do_this) {
 		google.accounts.oauth2.initTokenClient({
-			client_id: $location.$$hash ? $location.$$hash : "186424320143-vb1h85auvvpnojvmeg9gi6lv9aan4ggi.apps.googleusercontent.com",
+			client_id: "681684665042-tmaharckqihfoq0edggbnkth9hfmoh80.apps.googleusercontent.com",
 			scope: "https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/drive.appdata",
 			prompt: "",
 			callback: rcv
@@ -1078,9 +1078,7 @@ angular.module("vpApp").directive("vpGrid", function(vpConfiguration, vpDiary, $
 			//scope.vpgrid.init();
 	}
 
-	var url = "https://visual-planner.github.io/vpgrid.htm";
-	if ($location.$$host == "localhost" && $location.$$port == 8080)
-		url = "http://localhost:8080/visual-planner.github.io/vpgrid.htm";
+	var url = window.location.href.replace(/\/[^\/]*$/, "/") + "vpgrid.htm";
 
 	return {
 		controller: fCtl,
