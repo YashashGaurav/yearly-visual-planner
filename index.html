@@ -3,67 +3,153 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="description" content="Year-view planner for your Google Calendar events. Free and open-source."/>
-<meta name="google-site-verification" content="opI-WEBlK2jop1tsX3bOa5eD8lj_J70Ybqag-j8gPgc" />
 <link rel="icon" href="vp.png">
-<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Material+Icons">
-<title>visual-planner | Google Calendar Year View</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons">
+<title>yearly-visual-planner | Google Calendar Year View</title>
 <style>
-	body {margin: 2em;}
-	a {text-decoration: none; color: #3f67dd;}
-	h4 {padding-top: 1em;}
-	.material-icons {font-size: 1em; vertical-align: sub; padding-right: 0.5em;}
+	* { box-sizing: border-box; }
+	body {
+		margin: 0;
+		font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+		font-size: 15px;
+		line-height: 1.6;
+		color: #1a1a1a;
+		background: #fff;
+	}
+	a { text-decoration: none; color: #3f67dd; }
+	a:hover { text-decoration: underline; }
+
+	.hero {
+		background: #f7f8fc;
+		border-bottom: 1px solid #e8eaf0;
+		padding: 3em 2em;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		gap: 1em;
+	}
+	.hero-header {
+		display: flex;
+		align-items: center;
+		gap: 0.75em;
+	}
+	.hero h1 {
+		margin: 0;
+		font-size: 1.6em;
+		font-weight: 600;
+		letter-spacing: -0.02em;
+	}
+	.hero p {
+		margin: 0;
+		color: #555;
+		font-size: 0.95em;
+	}
+	.btn {
+		display: inline-block;
+		margin-top: 0.5em;
+		padding: 0.65em 1.6em;
+		background: #3f67dd;
+		color: #fff;
+		font-size: 0.95em;
+		font-weight: 500;
+		border-radius: 6px;
+		letter-spacing: 0.01em;
+		transition: background 0.15s;
+	}
+	.btn:hover { background: #2f54c8; text-decoration: none; }
+
+	.content {
+		max-width: 680px;
+		margin: 0 auto;
+		padding: 2.5em 2em;
+	}
+
+	.icons-list {
+		list-style: none;
+		padding: 0;
+		margin: 1.25em 0;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.4em 1em;
+	}
+	.icons-list li {
+		display: flex;
+		align-items: center;
+		gap: 0.4em;
+		color: #333;
+		font-size: 0.9em;
+	}
+	.material-icons {
+		font-size: 1em;
+		color: #666;
+		flex-shrink: 0;
+	}
+
+	h4 {
+		margin: 2em 0 0.5em;
+		font-size: 0.85em;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: #888;
+	}
+	ol {
+		padding-left: 1.25em;
+		margin: 0.5em 0;
+	}
+	ol li { margin-bottom: 0.5em; }
+
+	footer {
+		margin-top: 3em;
+		padding-top: 1.25em;
+		border-top: 1px solid #eee;
+		color: #aaa;
+		font-size: 0.82em;
+	}
 </style>
 </head>
 <body>
-<table>
-<tr>
-<td>
-	<a href="vp.htm"><img src="vp.png" style="padding-right: 1em;"/></a>
-</td>
-<td>
-	<h1>visual-planner</h1>
-	<p>Year-view planner for Google Calendar</p>
-</td>
-</tr>
-</table>
-<p>Open <a href="vp.htm" target="_blank">visual-planner</a>.</p>
-<p>The planner only shows events from calendars which are currently selected and visible in Google Calendar. Any of the loaded calendars can then be hidden by clicking the relevant button at the bottom of the page.</p>
-<div>
-	<p><span class="material-icons">view_column</span>Display the planner in Column layout.</p>
-	<p><span class="material-icons">view_list</span>Display the planner in List layout.</p>
-	<p><span class="material-icons">calendar_view_day</span>Expand/collapse event labels.</p>
-	<p><span class="material-icons">dark_mode</span>Toggle Dark Mode on/off.</p>
-	<p><span class="material-icons">refresh</span>Sync events with Google Calendar.</p>
-	<p><span class="material-icons">sync_alt</span>Continue scrolling by reloading at the current position.</p>
-	<p><span class="material-icons">print</span>Open print-friendly page.</p>
-	<p><span class="material-icons">settings</span>Settings.</p>
-	<p><span class="material-icons">backup</span>Save settings.</p>
-	<p><span class="material-icons">cancel</span>Cancel changes to settings.</p>
+
+<div class="hero">
+	<div class="hero-header">
+		<img src="vp.png" width="40" height="40" />
+		<h1>yearly-visual-planner</h1>
+	</div>
+	<p>A year-view planner for Google Calendar</p>
+	<a class="btn" href="vp.htm">Open Planner &rarr;</a>
 </div>
-<p>For more information please visit the <a href="https://groups.google.com/group/visual-planner-discuss">discussion group</a>.</p>
-<h4 id="privacy-policy">Privacy Policy</h4>
-<p>When you open visual-planner, you will be asked for permission to access your account in the following manner:<p>
-<ol>
-<li>
-	<p>View your calendars</p>
-	<p>Allowing this access enables visual-planner to display your calendar events in a year-view format that provides a much wider and more flexible overview of your future and past events than is available with Google Calendar.</p>
-	<p>visual-planner <b>DOES NOT</b> transfer, store or share any of this data or any other personal information.</p>
-</li>
-<li>
-	<p>View and manage its own configuration data in your Google Drive</p>
-	<p>Allowing this access enables visual-planner to remember your app settings for each session and across your devices. It <b>DOES NOT</b> grant visual-planner any kind of access to your Drive documents and files.</p>
-</li>
-</ol>
-<div style="padding-top: 2em; text-align: center;">
-	<p>This software project is funded by voluntary donation.</p>
-	<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-	<input type="hidden" name="cmd" value="_donations" />
-	<input type="hidden" name="business" value="XP2TVRFHUYZQE" />
-	<input type="hidden" name="item_name" value="visual-planner" />
-	<input type="hidden" name="currency_code" value="GBP" />
-	<input type="image" src="https://www.paypalobjects.com/en_GB/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-	<img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1" />
-	</form>
+
+<div class="content">
+
+	<p>Shows events from all calendars selected in Google Calendar. Toggle individual calendars on or off using the buttons at the bottom of the planner.</p>
+
+	<ul class="icons-list">
+		<li><span class="material-icons">view_column</span>Column layout</li>
+		<li><span class="material-icons">view_list</span>List layout</li>
+		<li><span class="material-icons">calendar_view_day</span>Expand/collapse labels</li>
+		<li><span class="material-icons">dark_mode</span>Dark mode</li>
+		<li><span class="material-icons">refresh</span>Sync with Google Calendar</li>
+		<li><span class="material-icons">sync_alt</span>Continue scrolling (Ctrl+Enter)</li>
+		<li><span class="material-icons">print</span>Print-friendly view</li>
+		<li><span class="material-icons">settings</span>Settings</li>
+		<li><span class="material-icons">backup</span>Save settings</li>
+		<li><span class="material-icons">cancel</span>Cancel changes</li>
+	</ul>
+
+	<h4>Privacy Policy</h4>
+	<p>When you open the planner, you'll be asked for two permissions:</p>
+	<ol>
+		<li><strong>View your calendars</strong> — displays events in year-view. No data is transferred, stored, or shared.</li>
+		<li><strong>Manage its own config in Google Drive</strong> — saves settings across sessions. No access to your Drive files.</li>
+	</ol>
+
+	<footer>
+		A fork of <a href="https://visual-planner.github.io" target="_blank">visual-planner</a> &mdash; <a href="https://github.com/YashashGaurav/yearly-visual-planner" target="_blank">source</a>
+	</footer>
+
 </div>
+
 </body>
 </html>
