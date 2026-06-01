@@ -4,21 +4,34 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-A year-view Google Calendar planner web app hosted at [visual-planner.github.io](https://visual-planner.github.io/). No build system — files are served directly as static HTML/CSS/JS.
+A year-view Google Calendar planner web app. No build system — files are served directly as static HTML/CSS/JS.
+
+- **Production URL**: `https://yashashgaurav.com/yearly-visual-planner/vp.htm`
+- **Deployed via**: GitHub Actions on push to `main` (see `.github/workflows/deploy.yml`)
 
 ## Local Development
 
-Serve the files with any static HTTP server on **port 8080**:
-
 ```bash
-python3 -m http.server 8080
-# or
-npx serve -p 8080
+make serve
 ```
 
-The `vpGrid` directive in `vplib.js` auto-detects `localhost:8080` and loads `vpgrid.htm` from the local server instead of the production URL. Without port 8080, the directive fetches the template from `visual-planner.github.io`.
+Opens the app at `http://localhost:8080/vp.htm`. Port 8080 is required — `vplib.js` uses `window.location.href` to construct the template URL, so it resolves correctly from whatever origin serves `vp.htm`.
 
-Open `http://localhost:8080/vp.htm` to use the app. It will request Google OAuth2 permissions on load.
+## Deployment
+
+GitHub Actions deploys to GitHub Pages automatically on every push to `main`. The live URL inherits the custom domain from `yashashgaurav.github.io` → `yashashgaurav.com`.
+
+## Google OAuth
+
+The app uses Google Identity Services (GIS) with OAuth client ID from the `yearly-visual-planner-app` Google Cloud project. Authorized origins: `http://localhost:8080` and `https://yashashgaurav.com`.
+
+Required APIs enabled in that project: **Google Calendar API** and **Google Drive API**.
+
+The OAuth consent screen is in **Testing** mode — only `yashash.gaurav@gmail.com` is a registered test user.
+
+Scopes requested:
+- `calendar.readonly` — read calendar events
+- `drive.appdata` — read/write settings file in the app's private Drive folder only
 
 ## Architecture
 
