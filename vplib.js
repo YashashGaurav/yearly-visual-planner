@@ -907,6 +907,52 @@ angular.module("vpApp").directive("vpGrid", function(vpConfiguration, vpDiary, $
 			scrollbox.style.visibility = "";
 
 			box.focus();
+			updateScrubBand();
+		}
+
+		function getVisibleRange() {
+			var monthdivs = scrollbox.querySelectorAll(".vpmonth");
+			var page = vpDiary.getPage();
+			if (!monthdivs.length) return null;
+
+			var scrollpos = view.column ? scrollbox.scrollLeft : scrollbox.scrollTop;
+			var viewSize = view.column ? scrollbox.clientWidth : scrollbox.clientHeight;
+
+			var first = null, last = null;
+			for (var i = 0; i < monthdivs.length; i++) {
+				var hdr = monthdivs[i].firstElementChild;
+				var pos = view.column ? hdr.offsetLeft : hdr.offsetTop;
+				var size = view.column ? hdr.offsetWidth : hdr.offsetHeight;
+				if (pos + size > scrollpos && pos < scrollpos + viewSize) {
+					if (first === null) first = i;
+					last = i;
+				}
+			}
+
+			if (first === null) return null;
+			return { first: page[first], last: page[last] };
+		}
+
+		function updateScrubBand() {
+			var band = document.getElementById("vpscrub-band");
+			if (!band || !$scope.vpgrid.year) return;
+
+			var range = getVisibleRange();
+			if (!range) return;
+
+			function monthPct(monthObj) {
+				var ym = monthObj.id.slice(2);       // e.g. "2026-07"
+				var yr = parseInt(ym);               // 2026
+				var mo = parseInt(ym.slice(5));      // 7
+				var offset = (yr - $scope.vpgrid.year) * 12 + (mo - 7);
+				return 50 + (offset / 66) * 100;
+			}
+
+			var leftPct = monthPct(range.first);
+			var rightPct = monthPct(range.last) + (100 / 66);
+
+			band.style.left = Math.max(0, leftPct) + '%';
+			band.style.width = Math.min(100 - Math.max(0, leftPct), rightPct - leftPct) + '%';
 		}
 
 		function getGridAreas(page) {
@@ -1022,6 +1068,16 @@ angular.module("vpApp").directive("vpGrid", function(vpConfiguration, vpDiary, $
 		}
 
 		this.onclickNavbar = function(evt) {
+			var yearLabel = evt.target.closest('[data-vp-year]');
+			if (yearLabel) {
+				hideGrid();
+				$timeout(function() {
+					vdt = new VpDateMonth(parseInt(yearLabel.dataset.vpYear), cfg.first_month);
+					loadPage();
+				});
+				return;
+			}
+
 			var navdiv = document.getElementById("vpnavbar");
 			var day_px = navdiv.offsetWidth / (365 * 5.5);
 			var year_pt = navdiv.offsetWidth / 2;
@@ -1051,6 +1107,10 @@ angular.module("vpApp").directive("vpGrid", function(vpConfiguration, vpDiary, $
 
 			evt.preventDefault();
 		}
+
+		scrollbox.onscroll = function() {
+			requestAnimationFrame(updateScrubBand);
+		};
 
 		scrollbox.onwheel = function(evt) {
 			if (evt.ctrlKey || evt.shiftKey || evt.altKey || evt.metaKey)

@@ -92,17 +92,62 @@
 }
 #vpnavbar {
 	height: var(--navbarheight);
+	position: relative;
+	cursor: col-resize;
 	user-select: none;
 	-ms-user-select: none;
 	-webkit-user-select: none;
 }
-#vpnavbar .panel {
-	height: 100%;
-	font-size: 0.6em;
-	font-weight: bold;
+#vpnavbar::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 50%;
+	height: 1px;
+	background-color: currentColor;
+	opacity: 0.25;
+	pointer-events: none;
+}
+#vpscrub-band {
+	position: absolute;
+	top: 15%;
+	bottom: 15%;
+	background-color: currentColor;
+	opacity: 0.15;
+	pointer-events: none;
+	border-radius: 2px;
+}
+.vpscrub-labels {
+	position: absolute;
+	inset: 0;
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
+	pointer-events: none;
+}
+.vpscrub-year {
+	position: relative;
+	font-size: 0.6em;
+	font-weight: bold;
+	padding: 0.1em 0.5em;
+	cursor: pointer;
+	pointer-events: auto;
+	border-radius: 0.25em;
+}
+.vpscrub-year::before {
+	content: '';
+	position: absolute;
+	left: 50%;
+	top: 0;
+	width: 1px;
+	height: 3px;
+	background-color: currentColor;
+	opacity: 0.4;
+	transform: translateX(-50%);
+}
+.vpscrub-year:hover {
+	background-color: hsl(0,0%,82%);
 }
 #vpcalbar {
 	height: var(--calbarheight);
@@ -152,13 +197,14 @@
 	#vpcalbar {background-color: hsl(0,0%,8%);}
 	.vpcalbtn:hover {background-color: hsl(0,0%,20%);}
 	.vpcalmarker {filter: brightness(0.8);}
+	.vpscrub-year:hover {background-color: hsl(0,0%,22%);}
 	</style>
 </span>
 
 <span ng-if="vp.gridoptions.shownavbar">
 	<style>
 	#vpbox {
-		--navbarheight: 1.2em;
+		--navbarheight: 1.8em;
 	}
 	</style>
 </span>
@@ -335,9 +381,14 @@
 </span>
 
 <div id="vpbox">
-	<div id="vpnavbar" ng-if="vp.gridoptions.shownavbar" title="View" ng-click="vpgrid.onclickNavbar($event)">
-		<div class="panel">
-			<div>&#9679;</div><div>{{vpgrid.year-2}}</div><div>&#9679;</div><div>{{vpgrid.year-1}}</div><div>&#9679;</div><div>{{vpgrid.year}}</div><div>&#9679;</div><div>{{vpgrid.year+1}}</div><div>&#9679;</div><div>{{vpgrid.year+2}}</div><div>&#9679;</div>
+	<div id="vpnavbar" ng-if="vp.gridoptions.shownavbar" ng-click="vpgrid.onclickNavbar($event)">
+		<div id="vpscrub-band"></div>
+		<div class="vpscrub-labels">
+			<div class="vpscrub-year" data-vp-year="{{vpgrid.year-2}}">{{vpgrid.year-2}}</div>
+			<div class="vpscrub-year" data-vp-year="{{vpgrid.year-1}}">{{vpgrid.year-1}}</div>
+			<div class="vpscrub-year" data-vp-year="{{vpgrid.year}}">{{vpgrid.year}}</div>
+			<div class="vpscrub-year" data-vp-year="{{vpgrid.year+1}}">{{vpgrid.year+1}}</div>
+			<div class="vpscrub-year" data-vp-year="{{vpgrid.year+2}}">{{vpgrid.year+2}}</div>
 		</div>
 	</div>
 	<div id="vpscrollbox" ng-class="vpgrid.sbox_cls" tabindex="0" ng-keydown="vpgrid.onkeydown($event)">
