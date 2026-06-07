@@ -21,6 +21,24 @@ Opens the app at `http://localhost:8080/vp.htm`. Port 8080 is required — `vpli
 
 GitHub Actions deploys to GitHub Pages automatically on every push to `main`. The live URL inherits the custom domain from `yashashgaurav.github.io` → `yashashgaurav.com`.
 
+## Staging
+
+**Staging URL**: `https://yashashgaurav.com/yearly-visual-planner/staging/vp.htm`
+
+Staging exists because it shares the same Google OAuth origin (`https://yashashgaurav.com`) as production — no Google Cloud Console changes are needed to test a feature branch with real OAuth. It is also the only way to validate mobile flows (e.g., Safari popup blocking) that do not reproduce in local development.
+
+The deploy mechanism is a single composite GitHub Pages artifact: the workflow checks out `main` at the site root and the `staging` branch under `/staging/`, then deploys them together in one step.
+
+### Using staging for a new feature
+
+1. Create a feature branch from `main` and make your changes.
+2. To preview on staging: `git push origin <feature-branch>:staging --force`
+   (force is required because the `staging` branch's history is replaced per feature).
+3. Wait ~1 minute for the GitHub Pages deploy workflow to finish, then test at the staging URL.
+4. When the feature is verified, open a PR from your feature branch → `main`. Merging deploys to production.
+
+> **Note**: The `staging` branch must remain in the github-pages environment's branch policy (Settings → Environments → github-pages → Deployment branch policies). This was set up once and does not need to be repeated for new features.
+
 ## Google OAuth
 
 The app uses Google Identity Services (GIS) with OAuth client ID from the `yearly-visual-planner-app` Google Cloud project. Authorized origins: `http://localhost:8080` and `https://yashashgaurav.com`.

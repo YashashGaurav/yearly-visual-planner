@@ -141,6 +141,7 @@ body {
 			<div ng-show="vp.permissions.drive_appdata"><span class="material-icons permission granted">verified_user</span>visual-planner has permission to manage its own application data in your Google Drive.</div>
 			<div ng-hide="vp.permissions.drive_appdata"><span class="material-icons permission denied">warning</span>visual-planner does not have permission to manage its own application data in your Google Drive and cannot save your settings.</div>
 		</p>
+		<p ng-hide="vp.permissions.view_calendars && vp.permissions.drive_appdata"><button ng-click="vpapp.onclickAuthorize()">Connect to Google</button></p>
 		<p><a href="https://myaccount.google.com/permissions" target="_blank">Manage Permissions</a></p>
 		<p><a href="https://drive.google.com/drive/my-drive" target="_blank">Manage Application Data</a>  (Drive > Settings > Manage Apps)</p>
 	</div>
@@ -263,6 +264,10 @@ angular.module("vpApp").controller("vpController", function($scope, vpConfigurat
 		vpConfiguration.saveAppData();
 		this.show = {planner: true};
 		$scope.vpgrid.reset();
+	}
+
+	this.onclickAuthorize = function() {
+		vpConfiguration.Load();
 	}
 });
 </script>

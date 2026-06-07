@@ -24,7 +24,8 @@ angular.module("vpApp").service("vpConfiguration", function($window, $location, 
 			client_id: "681684665042-tmaharckqihfoq0edggbnkth9hfmoh80.apps.googleusercontent.com",
 			scope: "https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/drive.appdata",
 			prompt: "",
-			callback: rcv
+			callback: rcv,
+			error_callback: function() { do_this(); }
 		}).requestAccessToken();
 
 		function rcv() {

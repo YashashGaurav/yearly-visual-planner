@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, staging]
   workflow_dispatch:
 
 permissions:
@@ -23,10 +23,27 @@ jobs:
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
+      # Checkout main branch into _site/
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: _site
+
+      # Checkout the perpetual staging branch into _site/staging/.
+      # Force-push any feature branch to origin/staging to preview it.
+      # continue-on-error: true so that prod deploys from main still work
+      # even if the staging branch is temporarily absent.
+      - uses: actions/checkout@v4
+        with:
+          ref: staging
+          path: _site/staging
+        continue-on-error: true
+
       - uses: actions/configure-pages@v5
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
+
       - id: deployment
         uses: actions/deploy-pages@v4
