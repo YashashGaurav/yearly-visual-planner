@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, fix/mobile-oauth-popup]
   workflow_dispatch:
 
 permissions:
@@ -23,10 +23,26 @@ jobs:
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
+      # Checkout main branch into _site/
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: _site
+
+      # Checkout the staging branch into _site/staging/
+      # continue-on-error: true so that prod deploys from main still work
+      # after fix/mobile-oauth-popup is merged or deleted.
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/mobile-oauth-popup
+          path: _site/staging
+        continue-on-error: true
+
       - uses: actions/configure-pages@v5
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
+
       - id: deployment
         uses: actions/deploy-pages@v4
