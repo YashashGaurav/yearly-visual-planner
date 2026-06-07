@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main, fix/mobile-oauth-popup]
+    branches: [main, staging]
   workflow_dispatch:
 
 permissions:
@@ -29,12 +29,13 @@ jobs:
           ref: main
           path: _site
 
-      # Checkout the staging branch into _site/staging/
+      # Checkout the perpetual staging branch into _site/staging/.
+      # Force-push any feature branch to origin/staging to preview it.
       # continue-on-error: true so that prod deploys from main still work
-      # after fix/mobile-oauth-popup is merged or deleted.
+      # even if the staging branch is temporarily absent.
       - uses: actions/checkout@v4
         with:
-          ref: fix/mobile-oauth-popup
+          ref: staging
           path: _site/staging
         continue-on-error: true
 
