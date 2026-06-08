@@ -12,31 +12,31 @@ angular.module("vpApp").service("vpConfiguration", function($window, $location, 
 
 	function cacheToken(tok) {
 		if (!tok || !tok.access_token || !tok.expires_in) return;
-		localStorage.setItem(GTOKEN_KEY, JSON.stringify({
+		$window.localStorage.setItem(GTOKEN_KEY, JSON.stringify({
 			access_token: tok.access_token,
-			scope: tok.scope || (CAL_SCOPE + " " + DRIVE_SCOPE),
+			scope: tok.scope,
 			expires_at: Date.now() + (tok.expires_in - 60) * 1000
 		}));
 	}
 
 	function readCachedToken() {
 		try {
-			var raw = localStorage.getItem(GTOKEN_KEY);
+			var raw = $window.localStorage.getItem(GTOKEN_KEY);
 			if (!raw) return null;
 			var cached = JSON.parse(raw);
 			if (!cached || Date.now() >= cached.expires_at) {
-				localStorage.removeItem(GTOKEN_KEY);
+				$window.localStorage.removeItem(GTOKEN_KEY);
 				return null;
 			}
 			return cached;
 		} catch(e) {
-			localStorage.removeItem(GTOKEN_KEY);
+			$window.localStorage.removeItem(GTOKEN_KEY);
 			return null;
 		}
 	}
 
 	function clearCachedToken() {
-		localStorage.removeItem(GTOKEN_KEY);
+		$window.localStorage.removeItem(GTOKEN_KEY);
 	}
 
 	this.clearCachedToken = clearCachedToken;
@@ -55,6 +55,8 @@ angular.module("vpApp").service("vpConfiguration", function($window, $location, 
 	$rootScope.vp.permissions = permissions;
 
 	function loadPermissions_then(do_this) {
+		permissions.view_calendars = false;
+		permissions.drive_appdata = false;
 		var cached = readCachedToken();
 		if (cached) {
 			gapi.client.setToken({access_token: cached.access_token});
@@ -70,7 +72,7 @@ angular.module("vpApp").service("vpConfiguration", function($window, $location, 
 			scope: CAL_SCOPE + " " + DRIVE_SCOPE,
 			prompt: "",
 			callback: rcv,
-			error_callback: function(err) {}
+			error_callback: function() { onload(); }
 		}).requestAccessToken();
 
 		function rcv() {
