@@ -12,11 +12,13 @@ angular.module("vpApp").service("vpConfiguration", function($window, $location, 
 
 	function cacheToken(tok) {
 		if (!tok || !tok.access_token || !tok.expires_in) return;
-		$window.localStorage.setItem(GTOKEN_KEY, JSON.stringify({
-			access_token: tok.access_token,
-			scope: tok.scope,
-			expires_at: Date.now() + (tok.expires_in - 60) * 1000
-		}));
+		try {
+			$window.localStorage.setItem(GTOKEN_KEY, JSON.stringify({
+				access_token: tok.access_token,
+				scope: tok.scope,
+				expires_at: Date.now() + (tok.expires_in - 60) * 1000
+			}));
+		} catch(e) {}
 	}
 
 	function readCachedToken() {
@@ -24,7 +26,7 @@ angular.module("vpApp").service("vpConfiguration", function($window, $location, 
 			var raw = $window.localStorage.getItem(GTOKEN_KEY);
 			if (!raw) return null;
 			var cached = JSON.parse(raw);
-			if (!cached || Date.now() >= cached.expires_at) {
+			if (!cached || !cached.expires_at || !cached.scope || Date.now() >= cached.expires_at) {
 				$window.localStorage.removeItem(GTOKEN_KEY);
 				return null;
 			}
@@ -60,9 +62,8 @@ angular.module("vpApp").service("vpConfiguration", function($window, $location, 
 		var cached = readCachedToken();
 		if (cached) {
 			gapi.client.setToken({access_token: cached.access_token});
-			var scopes = cached.scope.split(" ");
-			if (scopes.indexOf(CAL_SCOPE) !== -1) permissions.view_calendars = true;
-			if (scopes.indexOf(DRIVE_SCOPE) !== -1) permissions.drive_appdata = true;
+			if (cached.scope.indexOf(CAL_SCOPE) !== -1) permissions.view_calendars = true;
+			if (cached.scope.indexOf(DRIVE_SCOPE) !== -1) permissions.drive_appdata = true;
 			do_this();
 			return;
 		}
@@ -72,17 +73,18 @@ angular.module("vpApp").service("vpConfiguration", function($window, $location, 
 			scope: CAL_SCOPE + " " + DRIVE_SCOPE,
 			prompt: "",
 			callback: rcv,
-			error_callback: function() { onload(); }
+			error_callback: onload
 		}).requestAccessToken();
 
 		function rcv() {
-			if (google.accounts.oauth2.hasGrantedAllScopes(gapi.client.getToken(), CAL_SCOPE))
+			var token = gapi.client.getToken();
+			if (google.accounts.oauth2.hasGrantedAllScopes(token, CAL_SCOPE))
 				permissions.view_calendars = true;
 
-			if (google.accounts.oauth2.hasGrantedAllScopes(gapi.client.getToken(), DRIVE_SCOPE))
+			if (google.accounts.oauth2.hasGrantedAllScopes(token, DRIVE_SCOPE))
 				permissions.drive_appdata = true;
 
-			cacheToken(gapi.client.getToken());
+			cacheToken(token);
 			do_this();
 		}
 	}
