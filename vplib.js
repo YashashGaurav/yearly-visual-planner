@@ -6,6 +6,41 @@ angular.module("vpApp", []);
 angular.module("vpApp").service("vpConfiguration", function($window, $location, $rootScope) {
 	$rootScope.vp = {};
 
+	var GTOKEN_KEY = "vp-gtoken";
+	var CAL_SCOPE = "https://www.googleapis.com/auth/calendar.readonly";
+	var DRIVE_SCOPE = "https://www.googleapis.com/auth/drive.appdata";
+
+	function cacheToken(tok) {
+		if (!tok || !tok.access_token || !tok.expires_in) return;
+		localStorage.setItem(GTOKEN_KEY, JSON.stringify({
+			access_token: tok.access_token,
+			scope: tok.scope || (CAL_SCOPE + " " + DRIVE_SCOPE),
+			expires_at: Date.now() + (tok.expires_in - 60) * 1000
+		}));
+	}
+
+	function readCachedToken() {
+		try {
+			var raw = localStorage.getItem(GTOKEN_KEY);
+			if (!raw) return null;
+			var cached = JSON.parse(raw);
+			if (!cached || Date.now() >= cached.expires_at) {
+				localStorage.removeItem(GTOKEN_KEY);
+				return null;
+			}
+			return cached;
+		} catch(e) {
+			localStorage.removeItem(GTOKEN_KEY);
+			return null;
+		}
+	}
+
+	function clearCachedToken() {
+		localStorage.removeItem(GTOKEN_KEY);
+	}
+
+	this.clearCachedToken = clearCachedToken;
+
 	this.Load = function() {
 		loadPermissions_then(loadAppData);
 	}
@@ -20,21 +55,32 @@ angular.module("vpApp").service("vpConfiguration", function($window, $location, 
 	$rootScope.vp.permissions = permissions;
 
 	function loadPermissions_then(do_this) {
+		var cached = readCachedToken();
+		if (cached) {
+			gapi.client.setToken({access_token: cached.access_token});
+			var scopes = cached.scope.split(" ");
+			if (scopes.indexOf(CAL_SCOPE) !== -1) permissions.view_calendars = true;
+			if (scopes.indexOf(DRIVE_SCOPE) !== -1) permissions.drive_appdata = true;
+			do_this();
+			return;
+		}
+
 		google.accounts.oauth2.initTokenClient({
 			client_id: "681684665042-tmaharckqihfoq0edggbnkth9hfmoh80.apps.googleusercontent.com",
-			scope: "https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/drive.appdata",
+			scope: CAL_SCOPE + " " + DRIVE_SCOPE,
 			prompt: "",
 			callback: rcv,
-			error_callback: function() { do_this(); }
+			error_callback: function(err) {}
 		}).requestAccessToken();
 
 		function rcv() {
-			if (google.accounts.oauth2.hasGrantedAllScopes(gapi.client.getToken(), "https://www.googleapis.com/auth/calendar.readonly"))
+			if (google.accounts.oauth2.hasGrantedAllScopes(gapi.client.getToken(), CAL_SCOPE))
 				permissions.view_calendars = true;
 
-			if (google.accounts.oauth2.hasGrantedAllScopes(gapi.client.getToken(), "https://www.googleapis.com/auth/drive.appdata"))
+			if (google.accounts.oauth2.hasGrantedAllScopes(gapi.client.getToken(), DRIVE_SCOPE))
 				permissions.drive_appdata = true;
 
+			cacheToken(gapi.client.getToken());
 			do_this();
 		}
 	}
@@ -405,7 +451,7 @@ angular.module("vpApp").service("vpGCal", function(vpConfiguration, $rootScope, 
 				reqfailthen = Date.now();
 
 				if (reason.status == 401)  // auth expired
-					vpConfiguration.Authorise_then(loadAllCalEvents);
+					{ vpConfiguration.clearCachedToken(); vpConfiguration.Authorise_then(loadAllCalEvents); }
 				else if (reason.status == 410)  // sync expired
 					loadAllCalEvents();
 				else
