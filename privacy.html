@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="description" content="Privacy policy for yearly-visual-planner."/>
+<link rel="icon" href="vp.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons">
+<title>Privacy Policy — yearly-visual-planner</title>
+<style>
+	* { box-sizing: border-box; }
+	body {
+		margin: 0;
+		font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+		font-size: 15px;
+		line-height: 1.6;
+		color: #1a1a1a;
+		background: #fff;
+	}
+	a { text-decoration: none; color: #3f67dd; }
+	a:hover { text-decoration: underline; }
+
+	.hero {
+		background: #f7f8fc;
+		border-bottom: 1px solid #e8eaf0;
+		padding: 3em 2em;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		gap: 1em;
+	}
+	.hero-header {
+		display: flex;
+		align-items: center;
+		gap: 0.75em;
+	}
+	.hero h1 {
+		margin: 0;
+		font-size: 1.6em;
+		font-weight: 600;
+		letter-spacing: -0.02em;
+	}
+	.hero p {
+		margin: 0;
+		color: #555;
+		font-size: 0.95em;
+	}
+	.back-link {
+		font-size: 0.88em;
+		color: #3f67dd;
+	}
+
+	.content {
+		max-width: 680px;
+		margin: 0 auto;
+		padding: 2.5em 2em;
+	}
+
+	h2 {
+		margin: 1.75em 0 0.4em;
+		font-size: 1em;
+		font-weight: 600;
+	}
+	h2:first-child { margin-top: 0; }
+
+	p { margin: 0.5em 0; }
+
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 0.9em;
+		margin: 0.75em 0;
+	}
+	th, td {
+		text-align: left;
+		padding: 0.5em 0.75em;
+		border: 1px solid #e0e3ea;
+	}
+	th {
+		background: #f7f8fc;
+		font-weight: 600;
+	}
+
+	code {
+		font-family: ui-monospace, "SF Mono", Menlo, monospace;
+		font-size: 0.85em;
+		background: #f2f4f8;
+		padding: 0.1em 0.35em;
+		border-radius: 3px;
+	}
+
+	footer {
+		margin-top: 3em;
+		padding-top: 1.25em;
+		border-top: 1px solid #eee;
+		color: #aaa;
+		font-size: 0.82em;
+	}
+</style>
+</head>
+<body>
+
+<div class="hero">
+	<div class="hero-header">
+		<img src="vp.png" width="40" height="40" />
+		<h1>yearly-visual-planner</h1>
+	</div>
+	<p>Privacy Policy</p>
+	<a class="back-link" href="index.html">&larr; Back to home</a>
+</div>
+
+<div class="content">
+
+	<p style="color:#888;font-size:0.88em">Effective: June 19, 2026</p>
+
+	<h2>What this app does</h2>
+	<p>Yearly Visual Planner is a browser-based year-view calendar for Google Calendar. When you sign in, the app reads your calendar events and displays them in a grid entirely within your browser. Nothing is transmitted to any server operated by the developer.</p>
+
+	<h2>Google account permissions requested</h2>
+	<p>The app requests two OAuth 2.0 scopes:</p>
+	<table>
+		<tr>
+			<th>Scope</th>
+			<th>What it's used for</th>
+		</tr>
+		<tr>
+			<td><code>calendar.readonly</code></td>
+			<td>Read-only access to your calendar events. Events are fetched from Google's API and rendered in the year-view grid directly in your browser. The app never modifies your calendars and never stores event data outside your browser session.</td>
+		</tr>
+		<tr>
+			<td><code>drive.appdata</code></td>
+			<td>Read/write access to a single app-private file (<code>settings002.json</code>) in your own Google Drive <code>appDataFolder</code>. This is used to save your display preferences (title, month count, layout options) so they persist across sessions and devices. The app cannot read, list, or modify any other file in your Drive.</td>
+		</tr>
+	</table>
+
+	<h2>Data storage</h2>
+	<p>All processing happens in your browser. The developer operates no servers, databases, or analytics. Specifically:</p>
+	<ul>
+		<li><strong>Google Drive</strong> — your settings file (<code>settings002.json</code>) is stored in your own Drive <code>appDataFolder</code>, accessible only to this app and to you.</li>
+		<li><strong>Browser localStorage</strong> — two keys are stored locally on your device:
+			<ul>
+				<li><code>vp-gridviewinfo</code> — current view mode (column/list, expand/collapse, dark mode)</li>
+				<li><code>vp-caltoginfo</code> — per-calendar visibility toggles</li>
+			</ul>
+		</li>
+		<li><strong>OAuth access token</strong> — the Google OAuth token is cached in <code>localStorage</code> so you are not re-prompted on reload. It is short-lived and scoped only to the permissions above. It is never sent to any third party.</li>
+	</ul>
+	<p>No calendar event data, personal information, or usage data is ever transmitted to the developer or any third party.</p>
+
+	<h2>Data sharing</h2>
+	<p>The app does not share any data with third parties. There is no advertising, analytics, or telemetry.</p>
+
+	<h2>Data retention and deletion</h2>
+	<p>Your settings file in Google Drive persists until you delete it. You can delete it by revoking access to this app at <a href="https://myaccount.google.com/permissions" target="_blank">myaccount.google.com/permissions</a>, which also immediately revokes the OAuth token and prevents the app from accessing your account. localStorage data is cleared when you clear your browser's site data.</p>
+
+	<h2>Children</h2>
+	<p>This app is not directed at children under 13 and does not knowingly collect any information from children.</p>
+
+	<h2>Changes to this policy</h2>
+	<p>If this policy changes materially, the effective date at the top of this page will be updated. The policy is version-controlled alongside the app's source code on <a href="https://github.com/YashashGaurav/yearly-visual-planner" target="_blank">GitHub</a>.</p>
+
+	<h2>Contact</h2>
+	<p>For privacy questions, contact <a href="mailto:ygaurav@ripple.com">ygaurav@ripple.com</a>.</p>
+
+	<footer>
+		A fork of <a href="https://visual-planner.github.io" target="_blank">visual-planner</a> &mdash; <a href="https://github.com/YashashGaurav/yearly-visual-planner" target="_blank">source</a>
+	</footer>
+
+</div>
+
+</body>
+</html>
