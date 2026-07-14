@@ -544,14 +544,13 @@ angular.module("vpApp").service("vpGCal", function(vpConfiguration, $rootScope, 
 			this.title += "\n" + item.location;
 
 		this.edit = function() {
-			// Build a clean r/eventedit/<eid> URL rather than string-replacing
-			// on htmlLink directly: htmlLink often has trailing params (e.g. &ctz=...)
-			// that end up glued onto the path with no "?", producing a malformed
-			// URL. iOS Universal Links hand malformed URLs like that to the native
-			// Google Calendar app, which can't resolve the event and falls back to
-			// its default/today view instead of opening the tapped event.
-			var eid = new URL(this.htmlLink).searchParams.get("eid");
-			$window.open("https://www.google.com/calendar/r/eventedit/" + eid);
+			// Open htmlLink as Google generated it, rather than rewriting it into
+			// an r/eventedit/<eid> deep-edit URL: the eid in htmlLink is the ID
+			// scheme for Calendar's web viewer, and isn't reliably resolvable by
+			// the r/eventedit route. On iOS that mismatch makes the native Google
+			// Calendar app's Universal Link handler fall back to its default view
+			// instead of the specific event.
+			$window.open(this.htmlLink);
 		}
 	}
 
