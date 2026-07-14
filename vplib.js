@@ -542,8 +542,6 @@ angular.module("vpApp").service("vpGCal", function(vpConfiguration, $rootScope, 
 
 		if (item.location)
 			this.title += "\n" + item.location;
-
-		this.calendarLink = "https://www.google.com/calendar/r/day/" + new VpDate(this.start).GCalURL();
 	}
 
 	var msg=true;
