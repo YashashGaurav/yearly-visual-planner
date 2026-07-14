@@ -542,16 +542,6 @@ angular.module("vpApp").service("vpGCal", function(vpConfiguration, $rootScope, 
 
 		if (item.location)
 			this.title += "\n" + item.location;
-
-		this.edit = function() {
-			// Open htmlLink as Google generated it, rather than rewriting it into
-			// an r/eventedit/<eid> deep-edit URL: the eid in htmlLink is the ID
-			// scheme for Calendar's web viewer, and isn't reliably resolvable by
-			// the r/eventedit route. On iOS that mismatch makes the native Google
-			// Calendar app's Universal Link handler fall back to its default view
-			// instead of the specific event.
-			$window.open(this.htmlLink);
-		}
 	}
 
 	var msg=true;

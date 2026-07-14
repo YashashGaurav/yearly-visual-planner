@@ -51,6 +51,7 @@
 	overflow: hidden;
 }
 .vplabel {
+	display: block;
 	width: fit-content;
 	width: -moz-fit-content;
 	max-width: 100%;
@@ -64,6 +65,8 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	z-index: 2;
+	text-decoration: none;
+	color: inherit;
 }
 .vpmultilabelbox {
 	position: absolute;
@@ -398,18 +401,18 @@
 				<div ng-repeat="day in month.days" class="vpday" ng-class="day.cls">
 					<div class="vpnum vplink" ng-click="day.onclickNum($event)">{{day.num}}</div>
 					<div class="vpdaylabels" ng-if="day.labels" ng-style="day.labelboxstyle">
-						<div ng-repeat="label in day.labels | orderBy: ['evt.timestamp', 'evt.title']" class="vplabel vplink" title="{{label.evt.title}}" ng-style="label.style" ng-click="label.evt.edit()">
+						<a ng-repeat="label in day.labels | orderBy: ['evt.timestamp', 'evt.title']" class="vplabel vplink" title="{{label.evt.title}}" ng-style="label.style" href="{{label.evt.htmlLink}}" target="_blank" rel="noopener">
 							<span class="vplabeltext" ng-if="vpgrid.singledaytext">{{label.evt.desc}}</span>
 							<span ng-if="label.evt.location"><span class="material-icons">add_location</span>{{label.evt.location}}</span>
-						</div>
+						</a>
 					</div>
 				</div>
 				<div class="vpftr"></div>
 				<div ng-repeat="label in month.labels" class="vpmultilabelbox" ng-style="label.multiboxstyle">
-					<div class="vplabel vplink multiday" title="{{label.evt.title}}" ng-class="label.cls" ng-style="label.style" ng-click="label.evt.edit()">
+					<a class="vplabel vplink multiday" title="{{label.evt.title}}" ng-class="label.cls" ng-style="label.style" href="{{label.evt.htmlLink}}" target="_blank" rel="noopener">
 						<span class="vplabeltext" ng-if="vpgrid.multidaytext">{{label.evt.desc}}</span>
 						<span ng-if="label.evt.location"><span class="material-icons">add_location</span>{{label.evt.location}}</span>
-					</div>
+					</a>
 				</div>
 			</div>
 		</div>
