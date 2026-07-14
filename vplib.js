@@ -542,10 +542,6 @@ angular.module("vpApp").service("vpGCal", function(vpConfiguration, $rootScope, 
 
 		if (item.location)
 			this.title += "\n" + item.location;
-
-		this.edit = function() {
-			$window.open(this.htmlLink.replace("event?eid=", "r/eventedit/"));
-		}
 	}
 
 	var msg=true;
