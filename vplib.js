@@ -464,7 +464,7 @@ angular.module("vpApp").service("vpGCal", function(vpConfiguration, $rootScope, 
 		}
 
 		this.loadEvents = function() {
-			reqEvents({timeMin: isoSpan.start, timeMax: isoSpan.end, singleEvents: true});
+			reqEvents({timeMin: isoSpan.start, timeMax: isoSpan.end, singleEvents: true, maxResults: 2500});
 		}
 
 		this.syncEvents = function() {
